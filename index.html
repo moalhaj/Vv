@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Will You Be My Valentine?</title>
+  <style>
+    /* Basic styling for the Valentine card */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fbd7eb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .card {
+      background-color: #ffffff;
+      border-radius: 16px;
+      padding: 40px 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      max-width: 420px;
+    }
+
+    /* Cute hearts row */
+    .hearts {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    /* Styling for the teddy bear image */
+    .teddy {
+      width: 200px;
+      margin: 0 auto 20px;
+      display: block;
+    }
+
+    /* Layout for buttons */
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    #message {
+      font-size: 24px;
+      margin-bottom: 30px;
+      color: #333;
+    }
+
+    button {
+      font-size: 20px;
+      padding: 12px 24px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    #yesBtn {
+      background-color: #ff69b4;
+      color: #fff;
+    }
+
+    #noBtn {
+      background-color: #e4e4e4;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <!-- Decorative hearts across the top -->
+    <div class="hearts">❤️ 💖 💕 💗 💓 💞 💘 💝</div>
+    <!-- Cute teddy bear image -->
+    <img src="cute_teddy.png" alt="Cute Teddy Bear" class="teddy">
+    <!-- The main message asking the user -->
+    <div id="message">Will you be my Valentine?</div>
+    <!-- Yes and No buttons -->
+    <div class="buttons">
+      <button id="yesBtn">Yes</button>
+      <button id="noBtn">No</button>
+    </div>
+  </div>
+
+  <script>
+    // Select elements
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const message = document.getElementById('message');
+
+    // Phrases to show on the "No" button as it begs for a "Yes"
+    const noTexts = [
+      'Are you sure?',
+      'Please say yes!',
+      "Don't break my heart!",
+      'Come on, say yes...',
+      "I'm waiting for you ❤"
+    ];
+    let noClickCount = 0;
+
+    // When "Yes" is clicked, show a love message and hide buttons
+    yesBtn.addEventListener('click', () => {
+      message.textContent = 'ég elska þig prinsessan mín takk fyrir ❤️';
+      yesBtn.style.display = 'none';
+      noBtn.style.display = 'none';
+    });
+
+    // When "No" is clicked, change its text and enlarge the "Yes" button
+    noBtn.addEventListener('click', () => {
+      // Update the No button's text with begging phrases
+      if (noClickCount < noTexts.length) {
+        noBtn.textContent = noTexts[noClickCount];
+      } else {
+        // If phrases run out, repeat the last begging phrase
+        noBtn.textContent = noTexts[noTexts.length - 1];
+      }
+      // Calculate new scale for the Yes button
+      const scale = 1 + 0.2 * (noClickCount + 1);
+      yesBtn.style.transform = `scale(${scale})`;
+      // Increment the counter for subsequent clicks
+      noClickCount++;
+    });
+  </script>
+</body>
+</html>
