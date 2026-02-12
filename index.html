@@ -84,6 +84,13 @@
       background-color: #ffa0b2;
     }
 
+    /* Style for memory image */
+    .memoryImg {
+      max-width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    }
+
     #message {
       font-size: 24px;
       margin-bottom: 30px;
@@ -129,8 +136,15 @@
       <button id="hugBtn">Send a virtual hug</button>
       <button id="songBtn">Play a love song</button>
       <button id="quoteBtn">Get a romantic quote</button>
+      <button id="memoryBtn">Show a memory</button>
       <div id="optionMessage" style="margin-top:10px; font-size:18px; color:#c2185b;"></div>
     </div>
+    <!-- Hidden container for the memory image -->
+    <div id="memoryContainer" style="display:none; margin-top:20px;">
+      <img src="memory.jpg" alt="Memory" class="memoryImg">
+    </div>
+    <!-- Hidden audio element for the love song -->
+    <audio id="loveSong" src="song.wav"></audio>
   </div>
 
   <script>
@@ -183,15 +197,27 @@
     const hugBtn = document.getElementById('hugBtn');
     const songBtn = document.getElementById('songBtn');
     const quoteBtn = document.getElementById('quoteBtn');
+    const memoryBtn = document.getElementById('memoryBtn');
     const optionMessage = document.getElementById('optionMessage');
+    const memoryContainer = document.getElementById('memoryContainer');
+    const loveSong = document.getElementById('loveSong');
 
     hugBtn.addEventListener('click', () => {
+      // Hide memory image if visible
+      memoryContainer.style.display = 'none';
       optionMessage.textContent = '🤗 Sending you a big virtual hug!';
     });
     songBtn.addEventListener('click', () => {
-      optionMessage.textContent = "🎵 Try listening to 'Can't Help Falling in Love' by Elvis Presley!";
+      // Hide memory image if visible
+      memoryContainer.style.display = 'none';
+      // Play the love song audio
+      loveSong.currentTime = 0;
+      loveSong.play();
+      optionMessage.textContent = "🎵 Playing your love song...";
     });
     quoteBtn.addEventListener('click', () => {
+      // Hide memory image if visible
+      memoryContainer.style.display = 'none';
       const quotes = [
         "Love looks not with the eyes, but with the mind. – Shakespeare",
         "You are my sun, my moon, and all my stars. – E.E. Cummings",
@@ -199,6 +225,15 @@
       ];
       const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
       optionMessage.textContent = randomQuote;
+    });
+    // Show memory image when memoryBtn is clicked
+    memoryBtn.addEventListener('click', () => {
+      // Stop the song if it's playing
+      loveSong.pause();
+      // Clear text message
+      optionMessage.textContent = '';
+      // Toggle display of memory image
+      memoryContainer.style.display = 'block';
     });
   </script>
 </body>
