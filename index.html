@@ -330,8 +330,6 @@
     hugBtn.addEventListener('click', () => {
       // Hide the slideshow
       slideshowContainer.style.display = 'none';
-      // Pause the love song
-      loveSong.pause();
       // Stop automatic slideshow
       stopSlideshow();
       // Display hug message
@@ -345,13 +343,11 @@
       // Start the love song from the beginning
       loveSong.currentTime = 0;
       loveSong.play();
-      optionMessage.textContent = "🎵 Playing your love song...";
+      optionMessage.textContent = "🎵 Replaying your love song...";
     });
     quoteBtn.addEventListener('click', () => {
       // Hide slideshow
       slideshowContainer.style.display = 'none';
-      // Stop the love song if playing
-      loveSong.pause();
       // Stop automatic slideshow
       stopSlideshow();
       const quotes = [
@@ -365,8 +361,7 @@
 
     // Show memories slideshow when slideshowBtn is clicked
     slideshowBtn.addEventListener('click', () => {
-      // Pause the love song
-      loveSong.pause();
+      // Leave the love song playing while viewing the slideshow
       // Hide option message text
       optionMessage.textContent = '';
       // Show slideshow container
@@ -395,19 +390,17 @@
 
     // Show date ideas when activitiesBtn is clicked
     activitiesBtn.addEventListener('click', () => {
-      // Pause any playing song
-      loveSong.pause();
       // Hide the slideshow
       slideshowContainer.style.display = 'none';
       // Stop automatic slideshow
       stopSlideshow();
-      // Provide some romantic date ideas in English with an Icelandic twist
+      // Provide simple date ideas anyone can enjoy
       optionMessage.innerHTML = '<ul style="text-align:left; margin:10px 0; padding-left:20px; color:#e91e63;">' +
-        '<li>Watch the Northern Lights together on a clear night</li>' +
-        '<li>Relax in a geothermal spa like the Blue Lagoon or Sky Lagoon</li>' +
-        '<li>Take a glacier hike or explore an ice cave on a guided tour</li>' +
-        '<li>Walk behind a waterfall such as Seljalandsfoss</li>' +
-        '<li>Enjoy a boat ride on the Jökulsárlón glacier lagoon</li>' +
+        '<li>Watch a romantic movie together</li>' +
+        '<li>Cook dinner together at home</li>' +
+        '<li>Enjoy a picnic under the stars</li>' +
+        '<li>Write love letters to each other</li>' +
+        '<li>Listen to a playlist of your favorite songs</li>' +
         '</ul>';
     });
   </script>
