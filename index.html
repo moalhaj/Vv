@@ -7,8 +7,8 @@
   <style>
     /* Basic styling for the Valentine card */
     body {
-      font-family: Arial, sans-serif;
-      background-color: #fbd7eb;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: linear-gradient(135deg, #f8d9e6 0%, #fbe9f4 100%);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -19,22 +19,23 @@
     .card {
       background-color: #ffffff;
       border-radius: 16px;
-      padding: 40px 30px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      padding: 40px 32px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
       text-align: center;
-      max-width: 420px;
+      max-width: 500px;
     }
 
     /* Cute hearts row */
     .hearts {
-      font-size: 32px;
-      margin-bottom: 10px;
+      font-size: 36px;
+      margin-bottom: 12px;
+      color: #e91e63;
     }
 
     /* Styling for the teddy bear image */
     .teddy {
       width: 200px;
-      margin: 0 auto 20px;
+      margin: 0 auto 24px;
       display: block;
     }
 
@@ -43,6 +44,7 @@
       display: flex;
       justify-content: center;
       gap: 20px;
+      margin-top: 20px;
     }
 
     /* Animation for bouncing teddy after a "Yes" */
@@ -66,11 +68,11 @@
 
     /* Options shown after the user clicks Yes */
     #afterYesOptions {
-      margin-top: 20px;
+      margin-top: 24px;
       display: none;
     }
     #afterYesOptions button {
-      background-color: #ffb6c1;
+      background-color: #ffc1d6;
       color: #333;
       padding: 10px 16px;
       border: none;
@@ -81,12 +83,12 @@
       transition: background-color 0.2s;
     }
     #afterYesOptions button:hover {
-      background-color: #ffa0b2;
+      background-color: #ffadc9;
     }
 
     /* Slideshow control buttons */
     .slideshow-controls button {
-      background-color: #ffb6c1;
+      background-color: #ffc1d6;
       color: #333;
       padding: 8px 14px;
       border: none;
@@ -96,7 +98,7 @@
       transition: background-color 0.2s;
     }
     .slideshow-controls button:hover {
-      background-color: #ffa0b2;
+      background-color: #ffadc9;
     }
 
     /* Hearts confetti style */
@@ -121,9 +123,9 @@
     }
 
     #message {
-      font-size: 24px;
+      font-size: 26px;
       margin-bottom: 30px;
-      color: #333;
+      color: #444;
     }
 
     button {
@@ -137,12 +139,12 @@
     }
 
     #yesBtn {
-      background-color: #ff69b4;
+      background-color: #e91e63;
       color: #fff;
     }
 
     #noBtn {
-      background-color: #e4e4e4;
+      background-color: #f2f2f2;
       color: #333;
     }
   </style>
@@ -165,16 +167,11 @@
       <!-- Countdown to next anniversary (20 May) will appear here -->
       <div id="countdown" style="margin-bottom:10px; font-size:16px; color:#555;"></div>
       <button id="hugBtn">Send a virtual hug</button>
-      <button id="songBtn">Play a love song</button>
+      <button id="songBtn">Replay love song</button>
       <button id="quoteBtn">Get a romantic quote</button>
-      <button id="memoryBtn">Show a memory</button>
       <button id="slideshowBtn">View memories slideshow</button>
       <button id="activitiesBtn">Date ideas</button>
       <div id="optionMessage" style="margin-top:10px; font-size:18px; color:#c2185b;"></div>
-    </div>
-    <!-- Hidden container for the memory image -->
-    <div id="memoryContainer" style="display:none; margin-top:20px;">
-      <img src="memory.jpg" alt="Memory" class="memoryImg">
     </div>
     <!-- Hidden audio element for the love song -->
     <audio id="loveSong" src="song.wav"></audio>
@@ -207,8 +204,8 @@
 
     // When "Yes" is clicked, show a love message, animate teddy and hearts, hide Yes/No, and show extra options
     yesBtn.addEventListener('click', () => {
-      // Update the main message
-      message.textContent = 'ég elska þig prinsessan mín takk fyrir ❤️';
+      // Update the main message to a romantic Icelandic phrase
+      message.textContent = 'Ég elska þig með öllu mínu hjarta. Gleðilegan Valentínusardag, ástin mín 💖';
       // Add animation classes to teddy and hearts
       document.querySelector('.teddy').classList.add('animated');
       document.querySelector('.hearts').classList.add('animated');
@@ -221,6 +218,10 @@
       // Initialize and start the countdown to next anniversary
       updateCountdown();
       countdownInterval = setInterval(updateCountdown, 1000);
+
+      // Start the love song automatically
+      loveSong.currentTime = 0;
+      loveSong.play();
 
       // Launch hearts confetti effect
       startConfetti();
@@ -246,11 +247,9 @@
     const hugBtn = document.getElementById('hugBtn');
     const songBtn = document.getElementById('songBtn');
     const quoteBtn = document.getElementById('quoteBtn');
-    const memoryBtn = document.getElementById('memoryBtn');
     const slideshowBtn = document.getElementById('slideshowBtn');
     const activitiesBtn = document.getElementById('activitiesBtn');
     const optionMessage = document.getElementById('optionMessage');
-    const memoryContainer = document.getElementById('memoryContainer');
     const loveSong = document.getElementById('loveSong');
     const countdownDiv = document.getElementById('countdown');
     const slideshowContainer = document.getElementById('slideshowContainer');
@@ -270,6 +269,8 @@
     ];
     let currentSlide = 0;
     let countdownInterval;
+    // Interval for automatic slideshow
+    let slideshowInterval;
 
     // Function to update countdown to next anniversary (20 May)
     function updateCountdown() {
@@ -308,25 +309,51 @@
       }
     }
 
+    // Function to start automatic slideshow
+    function startSlideshow() {
+      // Reset any existing interval
+      stopSlideshow();
+      slideshowInterval = setInterval(() => {
+        currentSlide = (currentSlide + 1) % memoryImages.length;
+        slideImage.src = memoryImages[currentSlide];
+      }, 3000);
+    }
+
+    // Function to stop automatic slideshow
+    function stopSlideshow() {
+      if (slideshowInterval) {
+        clearInterval(slideshowInterval);
+        slideshowInterval = null;
+      }
+    }
+
     hugBtn.addEventListener('click', () => {
-      // Hide other displays
-      memoryContainer.style.display = 'none';
+      // Hide the slideshow
       slideshowContainer.style.display = 'none';
+      // Pause the love song
+      loveSong.pause();
+      // Stop automatic slideshow
+      stopSlideshow();
+      // Display hug message
       optionMessage.textContent = '🤗 Sending you a big virtual hug!';
     });
     songBtn.addEventListener('click', () => {
-      // Hide other displays
-      memoryContainer.style.display = 'none';
+      // Hide slideshow
       slideshowContainer.style.display = 'none';
-      // Play the love song audio
+      // Stop the auto slideshow
+      stopSlideshow();
+      // Start the love song from the beginning
       loveSong.currentTime = 0;
       loveSong.play();
       optionMessage.textContent = "🎵 Playing your love song...";
     });
     quoteBtn.addEventListener('click', () => {
-      // Hide other displays
-      memoryContainer.style.display = 'none';
+      // Hide slideshow
       slideshowContainer.style.display = 'none';
+      // Stop the love song if playing
+      loveSong.pause();
+      // Stop automatic slideshow
+      stopSlideshow();
       const quotes = [
         "Love looks not with the eyes, but with the mind. – Shakespeare",
         "You are my sun, my moon, and all my stars. – E.E. Cummings",
@@ -335,57 +362,52 @@
       const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
       optionMessage.textContent = randomQuote;
     });
-    // Show memory image when memoryBtn is clicked
-    memoryBtn.addEventListener('click', () => {
-      // Stop the song if it's playing
-      loveSong.pause();
-      // Hide slideshow if visible
-      slideshowContainer.style.display = 'none';
-      // Clear text message
-      optionMessage.textContent = '';
-      // Show the memory image
-      memoryContainer.style.display = 'block';
-    });
 
     // Show memories slideshow when slideshowBtn is clicked
     slideshowBtn.addEventListener('click', () => {
-      // Stop song if playing
+      // Pause the love song
       loveSong.pause();
-      // Hide memory image and option message
-      memoryContainer.style.display = 'none';
+      // Hide option message text
       optionMessage.textContent = '';
       // Show slideshow container
       slideshowContainer.style.display = 'block';
-      // Set current slide to first if not set
+      // Reset to the first slide
       currentSlide = 0;
       slideImage.src = memoryImages[currentSlide];
+      // Start automatic slideshow
+      startSlideshow();
     });
 
     // Navigate to previous slide
     prevSlideBtn.addEventListener('click', () => {
       currentSlide = (currentSlide - 1 + memoryImages.length) % memoryImages.length;
       slideImage.src = memoryImages[currentSlide];
+      // Restart automatic slideshow to reset the timer
+      startSlideshow();
     });
     // Navigate to next slide
     nextSlideBtn.addEventListener('click', () => {
       currentSlide = (currentSlide + 1) % memoryImages.length;
       slideImage.src = memoryImages[currentSlide];
+      // Restart automatic slideshow to reset the timer
+      startSlideshow();
     });
 
     // Show date ideas when activitiesBtn is clicked
     activitiesBtn.addEventListener('click', () => {
-      // Stop any playing audio
+      // Pause any playing song
       loveSong.pause();
-      // Hide other displays
-      memoryContainer.style.display = 'none';
+      // Hide the slideshow
       slideshowContainer.style.display = 'none';
-      // Provide some romantic date ideas
-      optionMessage.innerHTML = '<ul style="text-align:left; margin:10px 0; padding-left:20px; color:#c2185b;">' +
-        '<li>مشاهدة فيلم رومانسي معًا</li>' +
-        '<li>إعداد عشاء منزلي سوياً</li>' +
-        '<li>نزهة ليلية تحت النجوم</li>' +
-        '<li>كتابة رسائل حب وتبادلها</li>' +
-        '<li>الاستماع إلى قائمة تشغيل من أغانيكما المفضلة</li>' +
+      // Stop automatic slideshow
+      stopSlideshow();
+      // Provide some romantic date ideas in English with an Icelandic twist
+      optionMessage.innerHTML = '<ul style="text-align:left; margin:10px 0; padding-left:20px; color:#e91e63;">' +
+        '<li>Watch the Northern Lights together on a clear night</li>' +
+        '<li>Relax in a geothermal spa like the Blue Lagoon or Sky Lagoon</li>' +
+        '<li>Take a glacier hike or explore an ice cave on a guided tour</li>' +
+        '<li>Walk behind a waterfall such as Seljalandsfoss</li>' +
+        '<li>Enjoy a boat ride on the Jökulsárlón glacier lagoon</li>' +
         '</ul>';
     });
   </script>
