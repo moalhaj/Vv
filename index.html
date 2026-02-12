@@ -84,6 +84,35 @@
       background-color: #ffa0b2;
     }
 
+    /* Slideshow control buttons */
+    .slideshow-controls button {
+      background-color: #ffb6c1;
+      color: #333;
+      padding: 8px 14px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.2s;
+    }
+    .slideshow-controls button:hover {
+      background-color: #ffa0b2;
+    }
+
+    /* Hearts confetti style */
+    .heart {
+      position: fixed;
+      top: -30px;
+      font-size: 24px;
+      pointer-events: none;
+      animation: fall linear forwards;
+      opacity: 1;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
     /* Style for memory image */
     .memoryImg {
       max-width: 100%;
@@ -133,10 +162,14 @@
     </div>
     <!-- Options shown after the user clicks Yes -->
     <div id="afterYesOptions">
+      <!-- Countdown to next anniversary (20 May) will appear here -->
+      <div id="countdown" style="margin-bottom:10px; font-size:16px; color:#555;"></div>
       <button id="hugBtn">Send a virtual hug</button>
       <button id="songBtn">Play a love song</button>
       <button id="quoteBtn">Get a romantic quote</button>
       <button id="memoryBtn">Show a memory</button>
+      <button id="slideshowBtn">View memories slideshow</button>
+      <button id="activitiesBtn">Date ideas</button>
       <div id="optionMessage" style="margin-top:10px; font-size:18px; color:#c2185b;"></div>
     </div>
     <!-- Hidden container for the memory image -->
@@ -145,6 +178,15 @@
     </div>
     <!-- Hidden audio element for the love song -->
     <audio id="loveSong" src="song.wav"></audio>
+
+    <!-- Hidden container for the memories slideshow -->
+    <div id="slideshowContainer" style="display:none; margin-top:20px;">
+      <img id="slideImage" src="memory1.jpg" class="memoryImg" alt="Slideshow image">
+      <div class="slideshow-controls" style="margin-top:10px; display:flex; justify-content:center; gap:10px;">
+        <button id="prevSlide">◀ Prev</button>
+        <button id="nextSlide">Next ▶</button>
+      </div>
+    </div>
   </div>
 
   <script>
@@ -175,6 +217,13 @@
       noBtn.style.display = 'none';
       // Show additional options
       document.getElementById('afterYesOptions').style.display = 'block';
+
+      // Initialize and start the countdown to next anniversary
+      updateCountdown();
+      countdownInterval = setInterval(updateCountdown, 1000);
+
+      // Launch hearts confetti effect
+      startConfetti();
     });
 
     // When "No" is clicked, change its text and enlarge the "Yes" button
@@ -198,26 +247,86 @@
     const songBtn = document.getElementById('songBtn');
     const quoteBtn = document.getElementById('quoteBtn');
     const memoryBtn = document.getElementById('memoryBtn');
+    const slideshowBtn = document.getElementById('slideshowBtn');
+    const activitiesBtn = document.getElementById('activitiesBtn');
     const optionMessage = document.getElementById('optionMessage');
     const memoryContainer = document.getElementById('memoryContainer');
     const loveSong = document.getElementById('loveSong');
+    const countdownDiv = document.getElementById('countdown');
+    const slideshowContainer = document.getElementById('slideshowContainer');
+    const slideImage = document.getElementById('slideImage');
+    const prevSlideBtn = document.getElementById('prevSlide');
+    const nextSlideBtn = document.getElementById('nextSlide');
+
+    // Array of memory images for the slideshow
+    const memoryImages = [
+      'memory1.jpg',
+      'memory2.jpg',
+      'memory3.jpg',
+      'memory4.jpg',
+      'memory5.jpg',
+      'memory6.jpg',
+      'memory7.jpg'
+    ];
+    let currentSlide = 0;
+    let countdownInterval;
+
+    // Function to update countdown to next anniversary (20 May)
+    function updateCountdown() {
+      const now = new Date();
+      let targetYear = now.getFullYear();
+      let targetDate = new Date(targetYear, 4, 20); // May is month 4 (0-indexed)
+      if (now > targetDate) {
+        targetDate = new Date(targetYear + 1, 4, 20);
+      }
+      const diff = targetDate - now;
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      countdownDiv.textContent = `Time until next anniversary: ${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
+    // Function to create a single heart for confetti effect
+    function createHeart() {
+      const heart = document.createElement('span');
+      heart.className = 'heart';
+      heart.textContent = '💖';
+      heart.style.left = Math.random() * 100 + 'vw';
+      const duration = 3 + Math.random() * 2;
+      heart.style.animationDuration = `${duration}s`;
+      document.body.appendChild(heart);
+      setTimeout(() => {
+        heart.remove();
+      }, duration * 1000);
+    }
+
+    // Function to start confetti hearts
+    function startConfetti() {
+      for (let i = 0; i < 30; i++) {
+        setTimeout(createHeart, i * 300);
+      }
+    }
 
     hugBtn.addEventListener('click', () => {
-      // Hide memory image if visible
+      // Hide other displays
       memoryContainer.style.display = 'none';
+      slideshowContainer.style.display = 'none';
       optionMessage.textContent = '🤗 Sending you a big virtual hug!';
     });
     songBtn.addEventListener('click', () => {
-      // Hide memory image if visible
+      // Hide other displays
       memoryContainer.style.display = 'none';
+      slideshowContainer.style.display = 'none';
       // Play the love song audio
       loveSong.currentTime = 0;
       loveSong.play();
       optionMessage.textContent = "🎵 Playing your love song...";
     });
     quoteBtn.addEventListener('click', () => {
-      // Hide memory image if visible
+      // Hide other displays
       memoryContainer.style.display = 'none';
+      slideshowContainer.style.display = 'none';
       const quotes = [
         "Love looks not with the eyes, but with the mind. – Shakespeare",
         "You are my sun, my moon, and all my stars. – E.E. Cummings",
@@ -230,10 +339,54 @@
     memoryBtn.addEventListener('click', () => {
       // Stop the song if it's playing
       loveSong.pause();
+      // Hide slideshow if visible
+      slideshowContainer.style.display = 'none';
       // Clear text message
       optionMessage.textContent = '';
-      // Toggle display of memory image
+      // Show the memory image
       memoryContainer.style.display = 'block';
+    });
+
+    // Show memories slideshow when slideshowBtn is clicked
+    slideshowBtn.addEventListener('click', () => {
+      // Stop song if playing
+      loveSong.pause();
+      // Hide memory image and option message
+      memoryContainer.style.display = 'none';
+      optionMessage.textContent = '';
+      // Show slideshow container
+      slideshowContainer.style.display = 'block';
+      // Set current slide to first if not set
+      currentSlide = 0;
+      slideImage.src = memoryImages[currentSlide];
+    });
+
+    // Navigate to previous slide
+    prevSlideBtn.addEventListener('click', () => {
+      currentSlide = (currentSlide - 1 + memoryImages.length) % memoryImages.length;
+      slideImage.src = memoryImages[currentSlide];
+    });
+    // Navigate to next slide
+    nextSlideBtn.addEventListener('click', () => {
+      currentSlide = (currentSlide + 1) % memoryImages.length;
+      slideImage.src = memoryImages[currentSlide];
+    });
+
+    // Show date ideas when activitiesBtn is clicked
+    activitiesBtn.addEventListener('click', () => {
+      // Stop any playing audio
+      loveSong.pause();
+      // Hide other displays
+      memoryContainer.style.display = 'none';
+      slideshowContainer.style.display = 'none';
+      // Provide some romantic date ideas
+      optionMessage.innerHTML = '<ul style="text-align:left; margin:10px 0; padding-left:20px; color:#c2185b;">' +
+        '<li>مشاهدة فيلم رومانسي معًا</li>' +
+        '<li>إعداد عشاء منزلي سوياً</li>' +
+        '<li>نزهة ليلية تحت النجوم</li>' +
+        '<li>كتابة رسائل حب وتبادلها</li>' +
+        '<li>الاستماع إلى قائمة تشغيل من أغانيكما المفضلة</li>' +
+        '</ul>';
     });
   </script>
 </body>
