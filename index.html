@@ -45,6 +45,45 @@
       gap: 20px;
     }
 
+    /* Animation for bouncing teddy after a "Yes" */
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .teddy.animated {
+      animation: bounce 1s infinite ease-in-out;
+    }
+
+    /* Optional pulse animation for the hearts row */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    .hearts.animated {
+      animation: pulse 2s infinite;
+    }
+
+    /* Options shown after the user clicks Yes */
+    #afterYesOptions {
+      margin-top: 20px;
+      display: none;
+    }
+    #afterYesOptions button {
+      background-color: #ffb6c1;
+      color: #333;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      margin: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.2s;
+    }
+    #afterYesOptions button:hover {
+      background-color: #ffa0b2;
+    }
+
     #message {
       font-size: 24px;
       margin-bottom: 30px;
@@ -85,6 +124,13 @@
       <button id="yesBtn">Yes</button>
       <button id="noBtn">No</button>
     </div>
+    <!-- Options shown after the user clicks Yes -->
+    <div id="afterYesOptions">
+      <button id="hugBtn">Send a virtual hug</button>
+      <button id="songBtn">Play a love song</button>
+      <button id="quoteBtn">Get a romantic quote</button>
+      <div id="optionMessage" style="margin-top:10px; font-size:18px; color:#c2185b;"></div>
+    </div>
   </div>
 
   <script>
@@ -103,11 +149,18 @@
     ];
     let noClickCount = 0;
 
-    // When "Yes" is clicked, show a love message and hide buttons
+    // When "Yes" is clicked, show a love message, animate teddy and hearts, hide Yes/No, and show extra options
     yesBtn.addEventListener('click', () => {
+      // Update the main message
       message.textContent = 'ég elska þig prinsessan mín takk fyrir ❤️';
+      // Add animation classes to teddy and hearts
+      document.querySelector('.teddy').classList.add('animated');
+      document.querySelector('.hearts').classList.add('animated');
+      // Hide the original Yes/No buttons
       yesBtn.style.display = 'none';
       noBtn.style.display = 'none';
+      // Show additional options
+      document.getElementById('afterYesOptions').style.display = 'block';
     });
 
     // When "No" is clicked, change its text and enlarge the "Yes" button
@@ -124,6 +177,28 @@
       yesBtn.style.transform = `scale(${scale})`;
       // Increment the counter for subsequent clicks
       noClickCount++;
+    });
+
+    // Event handlers for extra options after "Yes"
+    const hugBtn = document.getElementById('hugBtn');
+    const songBtn = document.getElementById('songBtn');
+    const quoteBtn = document.getElementById('quoteBtn');
+    const optionMessage = document.getElementById('optionMessage');
+
+    hugBtn.addEventListener('click', () => {
+      optionMessage.textContent = '🤗 Sending you a big virtual hug!';
+    });
+    songBtn.addEventListener('click', () => {
+      optionMessage.textContent = "🎵 Try listening to 'Can't Help Falling in Love' by Elvis Presley!";
+    });
+    quoteBtn.addEventListener('click', () => {
+      const quotes = [
+        "Love looks not with the eyes, but with the mind. – Shakespeare",
+        "You are my sun, my moon, and all my stars. – E.E. Cummings",
+        "I love you more than there are stars in the sky."
+      ];
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      optionMessage.textContent = randomQuote;
     });
   </script>
 </body>
